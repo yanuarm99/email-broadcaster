@@ -1,75 +1,47 @@
 package com.yanuar.util;
 
-import java.io.*;
-import java.util.Properties;
+import java.math.BigDecimal;
+import java.text.NumberFormat;
+import java.util.Locale;
 
-public class ConfigUtil {
-    private static final String FILE = "config.properties";
+public class CurrencyUtil {
 
-    public static SMTPConfig load() {
-        Properties p = new Properties();
-        File f = new File(FILE);
-        if (!f.exists()) return null;
-        try (FileInputStream fis = new FileInputStream(f)) {
-            p.load(fis);
-            SMTPConfig cfg = new SMTPConfig();
-            cfg.setHost(p.getProperty("smtp.host", ""));
-            cfg.setPort(Integer.parseInt(p.getProperty("smtp.port", "587")));
-            cfg.setUsername(p.getProperty("smtp.user", ""));
-            cfg.setPassword(p.getProperty("smtp.password", ""));
-            cfg.setUseTls(Boolean.parseBoolean(p.getProperty("smtp.ssl", "false")));
-            cfg.setFrom(p.getProperty("smtp.from", cfg.getUsername()));
-            return cfg;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
+    public static String formatRupiah(BigDecimal value) {
+        if (value == null) return "";
+        NumberFormat nf = NumberFormat.getCurrencyInstance(new Locale("id", "ID"));
+        nf.setMinimumFractionDigits(2);
+        nf.setMaximumFractionDigits(2);
+        return nf.format(value);
     }
 
-    public static void save(SMTPConfig cfg) throws IOException {
-        Properties p = new Properties();
-        p.setProperty("smtp.host", cfg.getHost() == null ? "" : cfg.getHost());
-        p.setProperty("smtp.port", String.valueOf(cfg.getPort()));
-        p.setProperty("smtp.user", cfg.getUsername() == null ? "" : cfg.getUsername());
-        p.setProperty("smtp.password", cfg.getPassword() == null ? "" : cfg.getPassword());
-        p.setProperty("smtp.ssl", String.valueOf(cfg.isUseTls()));
-        p.setProperty("smtp.from", cfg.getFrom() == null ? "" : cfg.getFrom());
-        // preserve last.excel.path if exists
-        File f = new File(FILE);
-        if (f.exists()) {
-            Properties old = new Properties();
-            try (FileInputStream fis = new FileInputStream(f)) {
-                old.load(fis);
-            } catch (IOException ignore) {}
-            String last = old.getProperty("last.excel.path");
-            if (last != null) p.setProperty("last.excel.path", last);
-        }
-        try (FileOutputStream fos = new FileOutputStream(f)) {
-            p.store(fos, "SMTP Configuration");
-        }
+    public static String terbilang(BigDecimal value) {
+        if (value == null) return "";
+        long v = value.longValue();
+        String words = toWords(v).trim();
+        if (words.isEmpty()) return "";
+        // capitalize first letter
+        words = words.substring(0,1).toUpperCase() + words.substring(1);
+        return words + " Rupiah";
     }
 
-    public static void setLastExcelPath(String path) throws IOException {
-        File f = new File(FILE);
-        Properties p = new Properties();
-        if (f.exists()) {
-            try (FileInputStream fis = new FileInputStream(f)) { p.load(fis); }
-        }
-        if (path == null) p.remove("last.excel.path"); else p.setProperty("last.excel.path", path);
-        try (FileOutputStream fos = new FileOutputStream(f)) { p.store(fos, "config"); }
+    // internal
+    private static String toWords(long n) {
+        if (n == 0) return "nol";
+        return convert(n).trim();
     }
 
-    public static String getLastExcelPath() {
-        File f = new File(FILE);
-        if (!f.exists()) return null;
-        try (FileInputStream fis = new FileInputStream(f)) {
-            Properties p = new Properties();
-            p.load(fis);
-            return p.getProperty("last.excel.path");
-        } catch (IOException e) { return null; }
-    }
-
-    public static void clearLastExcelPath() throws IOException {
-        setLastExcelPath(null);
+    private static String convert(long n) {
+        final String[] small = {"", "satu", "dua", "tiga", "empat", "lima", "enam", "tujuh", "delapan", "sembilan", "sepuluh", "sebelas"};
+        if (n < 12) return small[(int) n];
+        if (n < 20) return convert(n - 10) + " belas";
+        if (n < 100) return convert(n / 10) + " puluh" + (n % 10 != 0 ? " " + convert(n % 10) : "");
+        if (n < 200) return "seratus" + (n - 100 != 0 ? " " + convert(n - 100) : "");
+        if (n < 1000) return convert(n / 100) + " ratus" + (n % 100 != 0 ? " " + convert(n % 100) : "");
+        if (n < 2000) return "seribu" + (n - 1000 != 0 ? " " + convert(n - 1000) : "");
+        if (n < 1000000) return convert(n / 1000) + " ribu" + (n % 1000 != 0 ? " " + convert(n % 1000) : "");
+        if (n < 1000000000) return convert(n / 1000000) + " juta" + (n % 1000000 != 0 ? " " + convert(n % 1000000) : "");
+        if (n < 1000000000000L) return convert(n / 1000000000) + " miliar" + (n % 1000000000 != 0 ? " " + convert(n % 1000000000) : "");
+        if (n < 1000000000000000L) return convert(n / 1000000000000L) + " triliun" + (n % 1000000000000L != 0 ? " " + convert(n % 1000000000000L) : "");
+        return "";
     }
 }

@@ -1,49 +1,34 @@
 package com.yanuar.model;
 
-import java.math.BigDecimal;
-import java.text.NumberFormat;
-import java.util.Locale;
-import com.yanuar.util.CurrencyUtil;
+public class Template {
+    private int id;
+    private String subject;
+    private String body;
 
-public class Contact {
-    private String cifno;
-    private String nama;
-    private String email;
-    private BigDecimal totalTabungan;
+    public Template() {}
 
-    public Contact() {}
-
-    public Contact(String cifno, String nama, String email, BigDecimal totalTabungan) {
-        this.cifno = cifno == null ? "" : cifno;
-        this.nama = nama == null ? "" : nama;
-        this.email = email == null ? "" : email;
-        this.totalTabungan = totalTabungan == null ? BigDecimal.ZERO : totalTabungan;
+    public Template(int id, String subject, String body) {
+        this.id = id;
+        this.subject = subject == null ? "" : subject;
+        this.body = body == null ? "" : body;
     }
 
-    public String getCifno() { return cifno; }
-    public void setCifno(String cifno) { this.cifno = cifno; }
-
-    public String getNama() { return nama; }
-    public void setNama(String nama) { this.nama = nama; }
-
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
-
-    public BigDecimal getTotalTabungan() { return totalTabungan; }
-    public void setTotalTabungan(BigDecimal totalTabungan) { this.totalTabungan = totalTabungan; }
-
-    // Format Rupiah: "Rp 1.234.567,00"
-    public String getTotalTabunganRupiah() {
-        return CurrencyUtil.formatRupiah(totalTabungan);
+    public Template(String subject, String body) {
+        this(0, subject, body);
     }
 
-    // Terbilang: "Sepuluh Juta Dua Ratus..."
-    public String getTotalTabunganTerbilang() {
-        return CurrencyUtil.terbilang(totalTabungan);
-    }
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
+
+    public String getSubject() { return subject; }
+    public void setSubject(String subject) { this.subject = subject; }
+
+    public String getBody() { return body; }
+    public void setBody(String body) { this.body = body; }
 
     @Override
     public String toString() {
-        return "Contact{" + cifno + "," + nama + "," + email + "," + totalTabungan + "}";
+        String s = (subject == null || subject.trim().isEmpty()) ? "(no subject)" : subject;
+        return "[" + id + "] " + s;
     }
 }

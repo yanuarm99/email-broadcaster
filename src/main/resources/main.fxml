@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.yanuar.ui.MainFrameController">
+    <top>
+        <ToolBar>
+            <Button text="Load Excel" onAction="#onLoadExcel"/>
+            <Button text="SMTP Config" onAction="#onSmtpConfig"/>
+            <Button text="Start Broadcast" onAction="#onStartBroadcast"/>
+        </ToolBar>
+    </top>
+    <center>
+        <VBox spacing="6" >
+            <TableView fx:id="tableContacts" prefHeight="400">
+                <columns>
+                    <TableColumn text="CIFNO" fx:id="colCifno"/>
+                    <TableColumn text="NAMA" fx:id="colNama"/>
+                    <TableColumn text="EMAIL" fx:id="colEmail"/>
+                    <TableColumn text="TOTAL TABUNGAN" fx:id="colTotal"/>
+                </columns>
+            </TableView>
+            <ProgressBar fx:id="progressBar" prefWidth="600"/>
+            <TextArea fx:id="logArea" prefRowCount="6"/>
+        </VBox>
+    </center>
+</BorderPane>

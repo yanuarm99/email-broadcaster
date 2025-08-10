@@ -35,3 +35,6 @@ Aplikasi Java sederhana untuk mengirim broadcast email secara massal dengan temp
 
 3. **Buat Template Email**  
    Buat template email dengan placeholder, misal:  
+   
+   Halo {nama}, 
+   Ini adalah broadcast email dari kami.

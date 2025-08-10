@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="com.yanuar.ui.SmtpConfigController" spacing="10" padding="20">
+    <Label text="SMTP Configuration" styleClass="header-label"/>
+
+    <TextField fx:id="hostField" promptText="SMTP Host"/>
+    <TextField fx:id="portField" promptText="Port"/>
+    <TextField fx:id="usernameField" promptText="Username"/>
+    <PasswordField fx:id="passwordField" promptText="Password"/>
+
+    <HBox spacing="10">
+        <Button text="Save" fx:id="saveBtn" styleClass="success-btn"/>
+        <Button text="Cancel" fx:id="cancelBtn" styleClass="secondary-btn"/>
+    </HBox>
+</VBox>
